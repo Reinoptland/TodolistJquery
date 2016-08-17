@@ -84,7 +84,7 @@
       <input type="text" id="new-todo" placeholder="What needs to be done?">
     </form>
 
-    <ul id="todolist">
+    <ul id="todolist" class="live-search-list">
       <li class="todo">
         <input id="todo-1" type="checkbox" value="1">
         <label for="todo-1">Sweep the floor</label>
@@ -98,6 +98,8 @@
       Todo: <span id="todo-count">1</span> •
       Done: <span id="completed-count">0</span> •
       Total: <span id="total-count">1</span>
+
+      <input type="text" class="live-search-box" placeholder="search here" />
 
        <a href="#" id="clean-up">Clean up</a>
     </div>
@@ -170,6 +172,30 @@
       $.when($(".completed").remove())
         .then(updateCounters);
     }
+
+    jQuery(document).ready(function($){
+
+    $('.live-search-list li').each(function(){
+    $(this).attr('data-search-term', $(this).text().toLowerCase());
+    });
+
+    $('.live-search-box').on('keyup', function(){
+
+    var searchTerm = $(this).val().toLowerCase();
+
+        $('.live-search-list li').each(function(){
+
+            if ($(this).filter('[data-search-term *= ' + searchTerm + ']').length > 0 || searchTerm.length < 1) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+
+        });
+
+    });
+
+    });
 
     $("input[type=checkbox]").bind('change', toggleDone);
     $("form").bind("submit", submitTodo);
